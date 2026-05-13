@@ -6,8 +6,6 @@ const session      = require('express-session');
 const cookieParser = require('cookie-parser');
 const ejsLayouts   = require('express-ejs-layouts');
 const sequelize    = require('./config/database');
-
-
 // const { Product, Order, OrderItem } = require('./models');
 
 const productRoutes  = require('./routes/products');
@@ -32,6 +30,7 @@ app.use(session({
   saveUninitialized: false,
   cookie: { maxAge: 3600000 }
 }));
+
 // Middleware: carrito vacio en sesion si no existe
 app.use((req, res, next) => {
   if (!req.session.cart) {
@@ -43,9 +42,17 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => {
   res.send(`
-    Hello World - Allan De Roux
-    La aplicacion funciona en Render.
-    Puerto: ${port} | Entorno: ${process.env.NODE_ENV || 'development'}
+    
+Hello World - Allan De Roux
+
+    
+La aplicacion funciona en Render.
+
+
+    
+Puerto: ${port} | Entorno: ${process.env.NODE_ENV || 'development'}
+
+
   `);
 });
 // app.use('/',         productRoutes);
@@ -67,3 +74,5 @@ sequelize.sync()
     console.error('Error al sincronizar BD:', err.message);
     process.exit(1);
   });
+
+
