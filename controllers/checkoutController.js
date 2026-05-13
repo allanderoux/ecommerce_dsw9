@@ -22,7 +22,6 @@ async function getPayPalAccessToken() {
   const data = await res.json();
   return data.access_token;
 }
-
 const checkoutController = {
   getCheckoutPage: (req, res) => {
     if (!req.session.cart || req.session.cart.items.length === 0)
@@ -86,53 +85,7 @@ const checkoutController = {
       res.status(500).json({ error: 'Error al crear orden PayPal' });
     }
   },
-
   // 3. El JS de payment.ejs llama aquí cuando el usuario aprueba en PayPal
-  capturePayPalOrder: async (req, res) => {
-    try {
-      const { paypalOrderId, orderId } = req.body;
-      const accessToken = await getPayPalAccessToken();
-      const response    = await fetch(`${PAYPAL_BASE}/v2/checkout/orders/${paypalOrderId}/capture`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' }
-      });
-      const data     = await response.json();
-      const captured = data.status === 'COMPLETED';
-
-      const order = await Order.findByPk(parseInt(orderId));
-      if (!order) return res.status(404).json({ error: 'Orden no encontrada' });
-
-      if (captured) {
-        await order.update({ status: 'paid', paymentId: paypalOrderId });
-        req.session.cart           = { items: [], totalQty: 0, totalPrice: 0 };
-        req.session.pendingOrderId = null;
-        res.json({ success: true, orderId: order.id });
-      } else {
-        await order.update({ status: 'payment_failed' });
-        res.json({ success: false, status: data.status });
-      }
-    } catch (err) {
-      res.status(500).json({ error: 'Error al capturar el pago' });
-    }
-  },
-
-  handleCancelPayment: async (req, res) => {
-    try {
-      const order = await Order.findByPk(parseInt(req.query.orderId));
-      if (order) await order.update({ status: 'cancelled' });
-      res.render('payment-failed', {
-        title:   'Pago Cancelado',
-        message: 'Cancelaste el proceso de pago. Tu pedido no fue procesado.'
-      });
-    } catch (err) {
-      res.status(500).render('error', { title: 'Error', message: 'Error al cancelar.' });
-    }
-  }
-};
-
-module.exports = checkoutController;
-
-// 3. El JS de payment.ejs llama aquí cuando el usuario aprueba en PayPal
   capturePayPalOrder: async (req, res) => {
     try {
       const { paypalOrderId, orderId } = req.body;
