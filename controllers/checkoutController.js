@@ -36,12 +36,13 @@ const checkoutController = {
         return res.redirect('/cart');
       const cart  = req.session.cart;
       const order = await Order.create({
-        firstName: req.body.firstName, lastName:  req.body.lastName,
-        email:     req.body.email,     address:   req.body.address,
-        city:      req.body.city,      province:  req.body.province,
-        zip:       req.body.zip || '', phone:     req.body.phone,
-        total:     cart.totalPrice,    status:    'pending'
-      });
+  firstName: req.body.firstName, lastName:  req.body.lastName,
+  email:     req.body.email,     address:   req.body.address,
+  city:      req.body.city,      province:  req.body.province,
+  zip:       req.body.zip || '', phone:     req.body.phone,
+  total:     cart.totalPrice,    status:    'pending',
+  user_id:   req.session.userId || null   // null si el usuario no está autenticado
+});
       for (const item of cart.items) {
         await OrderItem.create({
           OrderId:   order.id,
