@@ -11,4 +11,4 @@ const Wishlist = sequelize.define('Wishlist', {
   indexes: [{ unique: true, fields: ['user_id', 'product_id'] }]
 });
 
-module.exports = Wishlist;npm install bcrypt
+module.exports = Wishlist; //
