@@ -48,7 +48,8 @@ const checkoutController = {
           OrderId:   order.id,
           ProductId: item.product.id,
           quantity:  item.quantity,
-          price:     item.product.price
+          price:     item.product.price,
+          store_id: product.store_id || null
         });
       }
       req.session.pendingOrderId = order.id;
