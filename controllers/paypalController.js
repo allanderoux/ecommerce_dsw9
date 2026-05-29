@@ -72,3 +72,5 @@ const processPayout = async (req, res) => {
     });
   }
 };
+
+module.exports = { showPayout, processPayout };
