@@ -15,6 +15,8 @@ const port = process.env.PORT || 3000;
 const storeAuthRoutes = require('./routes/storeAuth');
 const { attachLocals } = require('./middleware/authMiddleware')
 const userAuthRoutes = require('./routes/userAuth');
+const storeAdminRoutes = require('./routes/storeAdmin');
+const customerRoutes = require('./routes/customer');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -39,6 +41,7 @@ app.use(['/store/login', '/store/register',
 );
 app.use('/store', storeAuthRoutes);
 app.use('/user', userAuthRoutes);
+app.use('/customer', customerRoutes);
 
 // Middleware: carrito vacio en sesion si no existe
 app.use((req, res, next) => {
@@ -67,6 +70,7 @@ Puerto: ${port} | Entorno: ${process.env.NODE_ENV || 'development'}
 app.use('/',         productRoutes);
 app.use('/cart',     cartRoutes);
 app.use('/checkout', checkoutRoutes);
+app.use('/store-admin', storeAdminRoutes);
 
 app.use((req, res) => {
   res.status(404).render('404', { title: 'Pagina no encontrada' });
