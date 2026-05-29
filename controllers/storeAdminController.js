@@ -88,6 +88,7 @@ const listOrders = async (req, res) => {
   // Agrupar items por orden
   const ordersMap = {};
   items.forEach(item => {
+    if (!item.order) return; // ← agrega esta línea para ignorar items sin orden
     const oid = item.order_id;
     if (!ordersMap[oid]) ordersMap[oid] = { order: item.order, items: [] };
     ordersMap[oid].items.push(item);
