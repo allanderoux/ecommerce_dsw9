@@ -44,13 +44,13 @@ const checkoutController = {
   user_id:   req.session.userId || null   // null si el usuario no está autenticado
 });
       for (const item of cart.items) {
-        await OrderItem.create({
-          OrderId:   order.id,
-          ProductId: item.product.id,
-          quantity:  item.quantity,
-          price:     item.product.price,
-          store_id:  item.product.store_id || null  // ← corregido
-        });
+       await OrderItem.create({
+  order_id:   order.id,
+  product_id: item.product.id,
+  quantity:   item.quantity,
+  price:      item.product.price,
+  store_id:   item.product.store_id || null
+});
       }
       req.session.pendingOrderId = order.id;
       // Renderiza la vista con los botones de PayPal
